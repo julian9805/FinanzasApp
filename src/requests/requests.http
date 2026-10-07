@@ -1,0 +1,52 @@
+### Crear usuario
+POST http://localhost:8080/api/usuarios
+Content-Type: application/json
+
+{
+  "nombre": "Juan Pérez",
+  "email": "juan@test.com",
+  "password": "123456"
+}
+
+### Listar todos
+GET http://localhost:8080/api/usuarios
+
+### Buscar por id (existente)
+GET http://localhost:8080/api/usuarios/1
+
+### Buscar por id (NO existente -> debe dar 404)
+GET http://localhost:8080/api/usuarios/99
+
+### Email duplicado -> debe dar 409
+POST http://localhost:8080/api/usuarios
+Content-Type: application/json
+
+{
+  "nombre": "Otro Juan",
+  "email": "juan@test.com",
+  "password": "654321"
+}
+
+### Validación fallida -> debe dar 400
+POST http://localhost:8080/api/usuarios
+Content-Type: application/json
+
+{
+  "nombre": "",
+  "email": "no-es-un-email",
+  "password": "123456"
+}
+
+### Crear cuenta
+POST http://localhost:8080/api/cuentas
+Content-Type: application/json
+
+{
+  "nombre": "Cuenta Corriente BBVA",
+  "tipo": "BANCO",
+  "saldo": 1500.50,
+  "usuarioId": 1
+}
+
+### Listar cuentas de un usuario
+GET http://localhost:8080/api/cuentas/usuario/1

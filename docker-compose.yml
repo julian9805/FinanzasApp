@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: finanzas-db
+    restart: always
+    environment:
+      POSTGRES_DB: finanzas
+      POSTGRES_USER: finanzas_user
+      POSTGRES_PASSWORD: finanzas_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - finanzas_data:/var/lib/postgresql/data
+
+volumes:
+  finanzas_data:
