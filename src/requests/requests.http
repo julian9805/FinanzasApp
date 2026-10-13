@@ -50,3 +50,59 @@ Content-Type: application/json
 
 ### Listar cuentas de un usuario
 GET http://localhost:8080/api/cuentas/usuario/1
+
+
+### Crear categoría de gasto
+POST http://localhost:8080/api/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Comida",
+  "tipo": "GASTO",
+  "icono": "🍔",
+  "usuarioId": 1
+}
+
+### Crear categoría de ingreso
+POST http://localhost:8080/api/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Salario",
+  "tipo": "INGRESO",
+  "icono": "💰",
+  "usuarioId": 1
+}
+
+### Listar categorías del usuario
+GET http://localhost:8080/api/categorias/usuario/1
+
+### Gasto: comida (categoría 1)
+POST http://localhost:8080/api/transacciones
+Content-Type: application/json
+
+{
+  "descripcion": "Compra semanal",
+  "monto": 50.00,
+  "fecha": "2026-10-13",
+  "cuentaId": 1,
+  "categoriaId": 1
+}
+
+### Ingreso: salario (categoría 2)
+POST http://localhost:8080/api/transacciones
+Content-Type: application/json
+
+{
+  "descripcion": "Nómina octubre",
+  "monto": 1200.00,
+  "fecha": "2026-10-13",
+  "cuentaId": 1,
+  "categoriaId": 2
+}
+
+### Listar transacciones del usuario
+GET http://localhost:8080/api/transacciones/usuario/1
+
+### Comprobar que el saldo cambió
+GET http://localhost:8080/api/cuentas/1
