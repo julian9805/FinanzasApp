@@ -133,3 +133,43 @@ Content-Type: application/json
 
 ### Usuarios
 GET http://localhost:8080/api/usuarios
+
+### Login correcto
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "juan@test.com",
+  "password": "123456"
+}
+
+### Login con contraseña incorrecta -> debe dar 401
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "juan@test.com",
+  "password": "mala"
+}
+
+### Sin token -> debe dar 401
+GET http://localhost:8080/api/cuentas/usuario/1
+
+### Login (guarda el token en una variable)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "juan@test.com",
+  "password": "123456"
+}
+
+> {% client.global.set("token", response.body.token); %}
+
+### Con token -> debe dar 200
+GET http://localhost:8080/api/cuentas/usuario/1
+Authorization: Bearer {{token}}
+
+### Token falso -> debe dar 401
+GET http://localhost:8080/api/cuentas/usuario/1
+Authorization: Bearer esto.no.es.un.token
