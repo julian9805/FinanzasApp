@@ -1,9 +1,12 @@
 package com.julian.finanzasapp.user;
 
+import com.julian.finanzasapp.user.dto.UsuarioRequest;
+import com.julian.finanzasapp.user.dto.UsuarioResponse;
+import com.julian.finanzasapp.user.dto.UsuarioUpdateRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -17,24 +20,24 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public List<Usuario> listar() {
+    public List<UsuarioResponse> listar() {
         return usuarioService.listarTodos();
     }
 
     @GetMapping("/{id}")
-    public Usuario buscarPorId(@PathVariable Long id) {
+    public UsuarioResponse buscarPorId(@PathVariable Long id) {
         return usuarioService.buscarPorId(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario crear(@Valid @RequestBody Usuario usuario) {
-        return usuarioService.crear(usuario);
+    public UsuarioResponse crear(@Valid @RequestBody UsuarioRequest request) {
+        return usuarioService.crear(request);
     }
 
     @PutMapping("/{id}")
-    public Usuario actualizar(@PathVariable Long id, @Valid @RequestBody Usuario usuario) {
-        return usuarioService.actualizar(id, usuario);
+    public UsuarioResponse actualizar(@PathVariable Long id, @Valid @RequestBody UsuarioUpdateRequest request) {
+        return usuarioService.actualizar(id, request);
     }
 
     @DeleteMapping("/{id}")

@@ -106,3 +106,30 @@ GET http://localhost:8080/api/transacciones/usuario/1
 
 ### Comprobar que el saldo cambió
 GET http://localhost:8080/api/cuentas/1
+
+### Consultar usuario 1
+GET http://localhost:8080/api/usuarios/1
+
+
+### Crear usuario (la respuesta NO debe incluir password)
+POST http://localhost:8080/api/usuarios
+Content-Type: application/json
+
+{
+  "nombre": "Juan Pérez",
+  "email": "juan@test.com",
+  "password": "123456"
+}
+
+### Contraseña demasiado corta -> debe dar 400
+POST http://localhost:8080/api/usuarios
+Content-Type: application/json
+
+{
+  "nombre": "Ana",
+  "email": "ana@test.com",
+  "password": "123"
+}
+
+### Usuarios
+GET http://localhost:8080/api/usuarios
