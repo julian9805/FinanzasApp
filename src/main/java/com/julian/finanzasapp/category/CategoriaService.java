@@ -27,10 +27,10 @@ public class CategoriaService {
                 .toList();
     }
 
-    public CategoriaResponse crear(CategoriaRequest request) {
-        Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
+    public CategoriaResponse crear(CategoriaRequest request, Long usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
-                        "Usuario no encontrado con id: " + request.getUsuarioId()));
+                        "Usuario no encontrado con id: " + usuarioId));
 
         Categoria categoria = new Categoria();
         categoria.setNombre(request.getNombre());
@@ -38,12 +38,11 @@ public class CategoriaService {
         categoria.setIcono(request.getIcono());
         categoria.setUsuario(usuario);
 
-        Categoria guardada = categoriaRepository.save(categoria);
-        return convertirAResponse(guardada);
+        return convertirAResponse(categoriaRepository.save(categoria));
     }
 
-    public void eliminar(Long id) {
-        Categoria categoria = categoriaRepository.findById(id)
+    public void eliminar(Long id, Long usuarioId) {
+        Categoria categoria = categoriaRepository.findByIdAndUsuarioId(id, usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Categoría no encontrada con id: " + id));
         categoriaRepository.delete(categoria);
     }

@@ -38,19 +38,14 @@ public class TransaccionService {
     }
 
     @Transactional
-    public TransaccionResponse crear(TransaccionRequest request) {
-        Cuenta cuenta = cuentaRepository.findById(request.getCuentaId())
+    public TransaccionResponse crear(TransaccionRequest request, Long usuarioId) {
+        Cuenta cuenta = cuentaRepository.findByIdAndUsuarioId(request.getCuentaId(), usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "Cuenta no encontrada con id: " + request.getCuentaId()));
 
-        Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
+        Categoria categoria = categoriaRepository.findByIdAndUsuarioId(request.getCategoriaId(), usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "Categoría no encontrada con id: " + request.getCategoriaId()));
-
-        // La cuenta y la categoría deben ser del mismo usuario
-        if (!cuenta.getUsuario().getId().equals(categoria.getUsuario().getId())) {
-            throw new IllegalArgumentException("La cuenta y la categoría pertenecen a usuarios distintos");
-        }
 
         Transaccion transaccion = new Transaccion();
         transaccion.setDescripcion(request.getDescripcion());
@@ -61,16 +56,14 @@ public class TransaccionService {
 
         aplicarAlSaldo(cuenta, categoria.getTipo(), request.getMonto());
 
-        Transaccion guardada = transaccionRepository.save(transaccion);
-        return convertirAResponse(guardada);
+        return convertirAResponse(transaccionRepository.save(transaccion));
     }
 
     @Transactional
-    public void eliminar(Long id) {
-        Transaccion transaccion = transaccionRepository.findById(id)
+    public void eliminar(Long id, Long usuarioId) {
+        Transaccion transaccion = transaccionRepository.findByIdAndCuentaUsuarioId(id, usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Transacción no encontrada con id: " + id));
 
-        // Revertimos el efecto que tuvo en el saldo
         Cuenta cuenta = transaccion.getCuenta();
         TipoCategoria tipoOriginal = transaccion.getCategoria().getTipo();
         TipoCategoria tipoInverso = tipoOriginal == TipoCategoria.INGRESO

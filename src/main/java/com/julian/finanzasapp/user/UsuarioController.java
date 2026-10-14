@@ -5,9 +5,8 @@ import com.julian.finanzasapp.user.dto.UsuarioResponse;
 import com.julian.finanzasapp.user.dto.UsuarioUpdateRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -19,30 +18,26 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping
-    public List<UsuarioResponse> listar() {
-        return usuarioService.listarTodos();
-    }
-
-    @GetMapping("/{id}")
-    public UsuarioResponse buscarPorId(@PathVariable Long id) {
-        return usuarioService.buscarPorId(id);
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioResponse crear(@Valid @RequestBody UsuarioRequest request) {
         return usuarioService.crear(request);
     }
 
-    @PutMapping("/{id}")
-    public UsuarioResponse actualizar(@PathVariable Long id, @Valid @RequestBody UsuarioUpdateRequest request) {
-        return usuarioService.actualizar(id, request);
+    @GetMapping("/me")
+    public UsuarioResponse perfil(@AuthenticationPrincipal Long usuarioId) {
+        return usuarioService.buscarPorId(usuarioId);
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/me")
+    public UsuarioResponse actualizar(@AuthenticationPrincipal Long usuarioId,
+                                      @Valid @RequestBody UsuarioUpdateRequest request) {
+        return usuarioService.actualizar(usuarioId, request);
+    }
+
+    @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Long id) {
-        usuarioService.eliminar(id);
+    public void eliminar(@AuthenticationPrincipal Long usuarioId) {
+        usuarioService.eliminar(usuarioId);
     }
 }

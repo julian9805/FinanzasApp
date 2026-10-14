@@ -27,15 +27,14 @@ public class CuentaService {
                 .toList();
     }
 
-    public CuentaResponse buscarPorId(Long id) {
-        Cuenta cuenta = obtenerCuenta(id);
-        return convertirAResponse(cuenta);
+    public CuentaResponse buscarPorId(Long id, Long usuarioId) {
+        return convertirAResponse(obtenerCuenta(id, usuarioId));
     }
 
-    public CuentaResponse crear(CuentaRequest request) {
-        Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
+    public CuentaResponse crear(CuentaRequest request, Long usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
-                        "Usuario no encontrado con id: " + request.getUsuarioId()));
+                        "Usuario no encontrado con id: " + usuarioId));
 
         Cuenta cuenta = new Cuenta();
         cuenta.setNombre(request.getNombre());
@@ -43,17 +42,15 @@ public class CuentaService {
         cuenta.setSaldo(request.getSaldo());
         cuenta.setUsuario(usuario);
 
-        Cuenta guardada = cuentaRepository.save(cuenta);
-        return convertirAResponse(guardada);
+        return convertirAResponse(cuentaRepository.save(cuenta));
     }
 
-    public void eliminar(Long id) {
-        Cuenta cuenta = obtenerCuenta(id);
-        cuentaRepository.delete(cuenta);
+    public void eliminar(Long id, Long usuarioId) {
+        cuentaRepository.delete(obtenerCuenta(id, usuarioId));
     }
 
-    private Cuenta obtenerCuenta(Long id) {
-        return cuentaRepository.findById(id)
+    private Cuenta obtenerCuenta(Long id, Long usuarioId) {
+        return cuentaRepository.findByIdAndUsuarioId(id, usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Cuenta no encontrada con id: " + id));
     }
 

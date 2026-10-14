@@ -18,7 +18,4 @@ public class CuentaRequest {
 
     @NotNull(message = "El saldo es obligatorio")
     private BigDecimal saldo;
-
-    @NotNull(message = "El id del usuario es obligatorio")
-    private Long usuarioId;
 }

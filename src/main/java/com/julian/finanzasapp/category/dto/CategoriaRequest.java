@@ -15,7 +15,4 @@ public class CategoriaRequest {
     private TipoCategoria tipo;
 
     private String icono;
-
-    @NotNull(message = "El id del usuario es obligatorio")
-    private Long usuarioId;
 }
